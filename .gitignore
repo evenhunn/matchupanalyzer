@@ -1,0 +1,7 @@
+
+# intellij-specifics
+*.iml
+*.idea
+
+# installments
+target
