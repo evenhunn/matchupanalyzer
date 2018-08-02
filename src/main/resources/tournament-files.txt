@@ -1,0 +1,1 @@
+StarCityGames;scg-tournament-page-url.txt;http://www.starcitygames.com
