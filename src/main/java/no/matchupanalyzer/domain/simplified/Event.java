@@ -1,9 +1,11 @@
-package no.matchupanalyzer.domain;
+package no.matchupanalyzer.domain.simplified;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import no.matchupanalyzer.domain.PlayerDeck;
+import no.matchupanalyzer.domain.Round;
 
 import java.util.List;
 

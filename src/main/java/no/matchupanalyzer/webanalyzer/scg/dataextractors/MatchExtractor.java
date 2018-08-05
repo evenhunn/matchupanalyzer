@@ -1,5 +1,6 @@
-package no.matchupanalyzer.webanalyzer.scg.dataExtractors;
+package no.matchupanalyzer.webanalyzer.scg.dataextractors;
 
+import lombok.extern.slf4j.Slf4j;
 import no.matchupanalyzer.domain.*;
 import no.matchupanalyzer.util.DocumentExtractor;
 import org.jsoup.nodes.Document;
@@ -14,7 +15,8 @@ import java.util.List;
 /**
  * Created by hanseeve on 30.07.2018.
  */
-public class MatchupExtractor {
+@Slf4j
+public class MatchExtractor {
     @Autowired
     private DocumentExtractor documentExtractor = new DocumentExtractor();
 
@@ -22,9 +24,14 @@ public class MatchupExtractor {
         List<Round> roundList = new ArrayList<>();
 
         for (String resultUrl : tournament.getResultPageUrlList()) {
-            Document document = documentExtractor.getHtmlFromUrl(resultUrl);
-            List<Element> resultHtmlElementList = extractRelevantResults(document);
-            roundList.add(parseResults(resultHtmlElementList));
+            try {
+                Document document = documentExtractor.getHtmlFromUrl(resultUrl);
+                List<Element> resultHtmlElementList = extractRelevantResults(document);
+                roundList.add(parseResults(resultHtmlElementList));
+            } catch (IndexOutOfBoundsException e) {
+                log.warn(String.format("Error encountered during parsing of results from url: %s - exception message is %s", resultUrl, e.getMessage()));
+                log.info("Skipping this round.");
+            }
         }
         return roundList;
     }
@@ -32,12 +39,12 @@ public class MatchupExtractor {
     private Round parseResults(List<Element> resultTableElementList) {
         List<Match> resultList = new ArrayList<>();
         for (Element resultTableElement : resultTableElementList) {
-            resultList.add(parseResult(resultTableElement));
+            resultList.add(parseMatch(resultTableElement));
         }
-        return Round.builder().resultList(resultList).build();
+        return Round.builder().matchList(resultList).build();
     }
 
-    private Match parseResult(Element resultString) {
+    private Match parseMatch(Element resultString) {
         List<Element> columns = resultString.getElementsByTag("td");
 
         PlayerDeck playerDeckA = PlayerDeck.builder()
@@ -58,37 +65,36 @@ public class MatchupExtractor {
                 .playerDeckB(playerDeckB)
                 .score(toScore(columns.get(3)))
                 .build();
-        if (result.getScore().getPlayer1Score() > result.getScore().getPlayer2Score()) {
+        if (result.getScore().getPlayerAScore() > result.getScore().getPlayerBScore()) {
             result.setWinner(result.getPlayerDeckA());
-        } else if (result.getScore().getPlayer1Score() < result.getScore().getPlayer2Score()) {
+        } else if (result.getScore().getPlayerAScore() < result.getScore().getPlayerBScore()) {
             result.setWinner(result.getPlayerDeckB());
         }
         return result;
     }
 
-    private Match checkIfSpecialCase(String score, PlayerDeck playerDeckA, PlayerDeck playerDeckB) {
-
-        if (score.matches(".*bye.*")) {
+    private Match checkIfSpecialCase(String scoreString, PlayerDeck playerDeckA, PlayerDeck playerDeckB) {
+        if (scoreString.matches(".*bye.*")) {
             return Match.builder()
                     .playerDeckA(playerDeckA)
                     .score(Score.builder().build())
                     .build();
-        } else if (score.matches(".*pending.*")) {
+        } else if (scoreString.matches(".*pending.*")) {
             return Match.builder()
                     .playerDeckA(playerDeckA)
                     .playerDeckB(playerDeckB)
                     .build();
-        } else if (score.matches(".*draw d-d.*")) {
+        } else if (scoreString.matches(".*draw d-d.*")) {
             return Match.builder()
                     .playerDeckA(playerDeckA)
                     .playerDeckB(playerDeckB)
                     .build();
-        } else if (score.matches(".*lost l-l.*")) {
+        } else if (scoreString.matches(".*lost l-l.*")) {
             return Match.builder()
                     .playerDeckA(playerDeckA)
                     .playerDeckB(playerDeckB)
                     .build();
-        } else if (score.matches(".*loss.*")) {
+        } else if (scoreString.matches(".*loss.*")) {
             return Match.builder()
                     .playerDeckA(playerDeckA)
                     .playerDeckB(playerDeckB)

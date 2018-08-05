@@ -1,4 +1,4 @@
-package no.matchupanalyzer.webanalyzer.scg.dataExtractors;
+package no.matchupanalyzer.webanalyzer.scg.dataextractors;
 
 import no.matchupanalyzer.domain.PlayerDeck;
 import no.matchupanalyzer.util.DocumentExtractor;
@@ -26,7 +26,7 @@ public class PlayerDeckLoader {
                 .stream()
                 .filter(e -> matchesDeckTable(e.text().toLowerCase()))
                 .findFirst();
-        List<Element> tableRowElements = tableElements.get().getElementsByTag("tr").stream().filter(e -> e.toString().toLowerCase().contains("modern")).collect(Collectors.toList());
+        List<Element> tableRowElements = tableElements.get().getElementsByTag("tr").stream().filter(e -> e.toString().toLowerCase().contains("finish_display")).collect(Collectors.toList());
         tableRowElements.forEach(e -> {
             Elements elements = e.getElementsByTag("td");
             playerDeckList.add(PlayerDeck.builder()

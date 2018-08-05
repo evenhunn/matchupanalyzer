@@ -1,6 +1,6 @@
 package no.matchupanalyzer.analytics;
 
-import no.matchupanalyzer.domain.Event;
+import no.matchupanalyzer.domain.simplified.Event;
 import no.matchupanalyzer.domain.Match;
 import no.matchupanalyzer.domain.Round;
 
@@ -16,7 +16,7 @@ public class RelevantMatchExtractor {
 
         for (Event event : events) {
             for (Round round : event.getRoundList()) {
-                for (Match match : round.getResultList()) {
+                for (Match match : round.getMatchList()) {
                     if (match.isRelevant()) {
                         relevantMatches.add(match);
                     }

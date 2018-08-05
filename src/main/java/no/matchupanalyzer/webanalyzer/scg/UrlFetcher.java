@@ -1,5 +1,6 @@
 package no.matchupanalyzer.webanalyzer.scg;
 
+import lombok.RequiredArgsConstructor;
 import no.matchupanalyzer.domain.Tournament;
 import no.matchupanalyzer.exception.NoUniqueElementException;
 import no.matchupanalyzer.util.DocumentExtractor;
@@ -13,16 +14,15 @@ import java.util.stream.Collectors;
 /**
  * Created by hanseeve on 02.08.2018.
  */
+@RequiredArgsConstructor
 public class UrlFetcher {
-
-    private DocumentExtractor documentExtractor = new DocumentExtractor();
 
     public String findPlayerDeckUrl(Tournament tournament) throws IOException {
         List<Element> elementList = tournament.getTournamentPageDocument()
                 .getElementsByClass("article_column")
                 .stream()
                 .filter(e -> e.text().contains("DECKLISTS"))
-                .filter(e -> e.text().toLowerCase().contains("modern open"))
+                .filter(e -> e.text().toLowerCase().contains(tournament.getType()))
                 .collect(Collectors.toList());
         uniqueElementValidator(elementList);
         //Narrowed down to section containting decklists, top 8 profiles, metagame, etc.
@@ -51,7 +51,7 @@ public class UrlFetcher {
         List<Element> elementList = tournament.getTournamentPageDocument()
                 .getElementsByClass("standings_column")
                 .stream()
-                .filter(e -> e.text().toLowerCase().contains("modern open"))
+                .filter(e -> e.text().toLowerCase().contains(tournament.getType()))
                 .collect(Collectors.toList());
         uniqueElementValidator(elementList);
         //Narrowed down to section containing winner and rounds

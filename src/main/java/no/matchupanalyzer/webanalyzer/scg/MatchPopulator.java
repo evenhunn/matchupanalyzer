@@ -19,7 +19,7 @@ public class MatchPopulator {
         this.tournament = tournament;
 
         for (Round round : tournament.getResultsList()) {
-            for (Match match : round.getResultList()) {
+            for (Match match : round.getMatchList()) {
                 populateIfAble(match.getPlayerDeckA());
                 populateIfAble(match.getPlayerDeckB());
             }

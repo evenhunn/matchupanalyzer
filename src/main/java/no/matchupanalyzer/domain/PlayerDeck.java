@@ -11,8 +11,9 @@ import lombok.Setter;
 @Setter
 @Builder
 public class PlayerDeck {
-    String playername;
-    String deckname;
+    private Tournament tournament;
+    private String playername;
+    private String deckname;
 
     public boolean hasDeck() {
         return deckname != null && !deckname.isEmpty();

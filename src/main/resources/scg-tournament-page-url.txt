@@ -1,3 +1,5 @@
-http://www.starcitygames.com/events/280718_indianapolis.html
-http://www.starcitygames.com/events/300618_atlanta.html
-http://www.starcitygames.com/events/260518_minneapolis.html
+http://www.starcitygames.com/events/280718_indianapolis.html;modern open;modern classic
+http://www.starcitygames.com/events/300618_atlanta.html;modern open;modern classic
+http://www.starcitygames.com/events/260518_minneapolis.html;modern open;modern classic
+http://www.starcitygames.com/events/190518_louisville.html;modern open;modern classic
+http://www.starcitygames.com/events/070418_milwaukee.html;modern open;modern classic

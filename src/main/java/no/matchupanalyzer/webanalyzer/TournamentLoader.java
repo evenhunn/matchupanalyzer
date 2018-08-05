@@ -39,25 +39,8 @@ public class TournamentLoader {
     private List<Tournament> loadTournaments(List<Organizer> organizerList) {
         List<Tournament> tournamentList = new ArrayList<>();
         for (Organizer organizer : organizerList) {
-            try {
-                List<String> scgUrlList = fileReader.readLinesFromFile(organizer.getFilename());
-
-                log.info("Reading tournament results for:");
-                for (String scgUrl : scgUrlList) {
-                    log.info(scgUrl);
-
-                    Tournament tournament = new Tournament();
-                    tournament.setOrganizer(organizer);
-                    tournament.setBaseUrl(organizer.getBaseUrl());
-                    tournament.setTournamentPageUrl(scgUrl);
-                    scgTournamentLoader.execute(tournament);
-
-                    tournamentList.add(tournament);
-
-                }
-            } catch (FileNotFoundException e) {
-                log.error(e.getMessage());
-                log.error("Failed to read file");
+            if (organizer.getName().equalsIgnoreCase("StarCityGames")) {
+                tournamentList.addAll(scgTournamentLoader.execute(organizer));
             }
         }
         return tournamentList;

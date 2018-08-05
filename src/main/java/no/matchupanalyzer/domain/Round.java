@@ -1,5 +1,6 @@
 package no.matchupanalyzer.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,13 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class Round {
-    private List<Match> resultList;
+    private Tournament tournament;
+    private List<Match> matchList;
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+        this.matchList.forEach(m -> m.setTournament(tournament));
+    }
 }

@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 public class Score {
-    private Integer player1Score;
-    private Integer player2Score;
+    private Integer playerAScore;
+    private Integer playerBScore;
 
     private static final Pattern scorePattern = Pattern.compile("[0-9]+-[0-9]+");
 
@@ -31,7 +31,10 @@ public class Score {
             List<String> scoreList = Arrays.stream(matcher.group().split("-"))
                     .map(String::trim)
                     .collect(Collectors.toList());
-            return new Score(Integer.parseInt(scoreList.get(0)), Integer.parseInt(scoreList.get(1)));
+            return Score.builder()
+                    .playerAScore(Integer.parseInt(scoreList.get(0)))
+                    .playerBScore(Integer.parseInt(scoreList.get(1)))
+                    .build();
         }
         throw new ParsingException(String.format("Failed to parse score. The score is: %s", score));
     }
